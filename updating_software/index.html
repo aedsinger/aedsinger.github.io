@@ -12,14 +12,14 @@
         <meta name="author" content="Hello Robot Inc">
       
       
-        <link rel="canonical" href="https://dev-docs.hello-robot.com/dynamixel_tutorial/">
+        <link rel="canonical" href="https://dev-docs.hello-robot.com/updating_software/">
       
       <link rel="icon" href="../images/hello_robot_favicon.png">
       <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
     
     
       
-        <title>Stretch RE1 - Working with the Dynamixel Servos - Hello Robot Documentation</title>
+        <title>Updating Stretch Software - Hello Robot Documentation</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#stretch-re1-working-with-the-dynamixel-servos" class="md-skip">
+        <a href="#updating-stretch-software" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Stretch RE1 - Working with the Dynamixel Servos
+              Updating Stretch Software
             
           </span>
         </div>
@@ -364,51 +364,64 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    Overview
+  <a href="#when-to-update" class="md-nav__link">
+    When to Update
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#servo-tools" class="md-nav__link">
-    Servo Tools
+  <a href="#how-to-update" class="md-nav__link">
+    How to Update
   </a>
   
-    <nav class="md-nav" aria-label="Servo Tools">
+    <nav class="md-nav" aria-label="How to Update">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#jogging-the-servos" class="md-nav__link">
-    Jogging the Servos
+  <a href="#stretch-ros" class="md-nav__link">
+    Stretch ROS
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#rebooting-the-servos" class="md-nav__link">
-    Rebooting the Servos
+  <a href="#stretch-body" class="md-nav__link">
+    Stretch Body
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#identify-servos-on-the-bus" class="md-nav__link">
-    Identify Servos on the Bus
+  <a href="#stretch-firmware" class="md-nav__link">
+    Stretch Firmware
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#setting-the-servo-baud-rate" class="md-nav__link">
-    Setting the Servo Baud Rate
+  <a href="#ubuntu" class="md-nav__link">
+    Ubuntu
   </a>
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    Troubleshooting
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
-  <a href="#setting-the-servo-id" class="md-nav__link">
-    Setting the Servo ID
+  <a href="#firmware-mismatch-error" class="md-nav__link">
+    Firmware Mismatch Error
   </a>
   
 </li>
@@ -432,102 +445,48 @@
                 
 
 
-<h1 id="stretch-re1-working-with-the-dynamixel-servos">Stretch RE1 - Working with the Dynamixel Servos</h1>
-<p>In this tutorial we will cover the basics required to work with Dynamixel servos and Stretch.</p>
-<p><strong>Note</strong>: This tutorial applies to Stretch Body v0.1.x or greater</p>
-<h2 id="overview">Overview</h2>
-<p>Stretch comes with two Dynamixel buses - one for the head and one for the end-of-arm:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>ls  /dev/hello-dynamixel-*
-<span class="go">/dev/hello-dynamixel-head  /dev/hello-dynamixel-wrist</span>
+<h1 id="updating-stretch-software">Updating Stretch Software</h1>
+<p>Stretch's software is improved with new features and bug fixes with each update. In this guide, we cover when and how to update the various software components on your Stretch RE1.</p>
+<h2 id="when-to-update">When to Update</h2>
+<p>We develop our software publicly on Github, allowing anyone to follow/propose the development of a code feature or bug fix. While we wholeheartedly welcome collaboration on Github, it is not necessary to be active on Github to follow our software releases. We announce every major release of software on our <a href="https://forum.hello-robot.com/c/announcements">forum</a>. These are stable releases with code that has been extensively tested on many Stretch RE1s. To be notified of new releases, create an account on the forum and click the bell icon in the top left of the <a href="https://forum.hello-robot.com/c/announcements/6">announcements section</a>. The forum is also available to report issues and ask questions about any of our software packages.</p>
+<h2 id="how-to-update">How to Update</h2>
+<p>Each Stretch RE1 is shipped with firmware, a Python SDK, and ROS packages developed specifically for Stretch. At the moment, there are three separate processes for updating each of these components.</p>
+<h3 id="stretch-ros">Stretch ROS</h3>
+<p>Stretch ROS is the <a href="https://www.ros.org/about-ros/">Robot Operating System</a> (ROS) interface to the robot. Many robotics developers find ROS useful to bootstrap their robotics software developments. You may update it using the following commands:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>roscd stretch_core
+<span class="gp">$ </span>git pull
 </code></pre></div>
-<p>Typically users will interact with these devices through either the <a href="https://github.com/hello-robot/stretch_body/blob/master/body/stretch_body/head.py">Head</a> or <a href="https://github.com/hello-robot/stretch_body/blob/master/body/stretch_body/end_of_arm.py">EndOfArm</a> interfaces. The EndOfArm interface may be extended to support custom tools, as described in the Stretch Body Tool Change Tutorial.</p>
-<p>In some cases users will need to work directly with the servos from the command line. The sections below covers these tools </p>
-<h2 id="servo-tools">Servo Tools</h2>
-<h3 id="jogging-the-servos">Jogging the Servos</h3>
-<p>You can directly command each servo using the command line tool <code>RE1_dynamixel_servo_jog.py</code>. This can be useful for debugging new servos added to the end-of-arm tool during system bring-up. For example, to command the head pan servo:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>RE1_dynamixel_jog.py /dev/hello-dynamixel-head <span class="m">11</span>
-<span class="go">[Dynamixel ID:011] ping Succeeded. Dynamixel model number : 1080</span>
-<span class="go">------ MENU -------</span>
-<span class="go">m: menu</span>
-<span class="go">a: increment position 50 tick</span>
-<span class="go">b: decrement position 50 tick</span>
-<span class="go">A: increment position 500 ticks</span>
-<span class="go">B: decrement position 500 ticks</span>
-<span class="go">v: set profile velocity</span>
-<span class="go">u: set profile acceleration</span>
-<span class="go">z: zero position</span>
-<span class="go">h: show homing offset</span>
-<span class="go">o: zero homing offset</span>
-<span class="go">q: got to position</span>
-<span class="go">p: ping</span>
-<span class="go">r: reboot</span>
-<span class="go">w: set max pwm</span>
-<span class="go">t: set max temp</span>
-<span class="go">i: set id</span>
-<span class="go">d: disable torque</span>
-<span class="go">e: enable torque</span>
-<span class="go">-------------------</span>
+<h3 id="stretch-body">Stretch Body</h3>
+<p>Stretch Body is the Python SDK to the robot. It abstracts away the low level details of communication with the embedded devices and provides an intuitive API to working with the robot. You may update it using the following commands:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>pip install -U hello-robot-stretch-body
+<span class="gp">$ </span>pip install -U hello-robot-stretch-body-tools
+<span class="gp">$ </span>pip install -U hello-robot-stretch-factory
+<span class="gp">$ </span>pip3 install -U hello_robot_stretch_body_tools_py3
 </code></pre></div>
-<h3 id="rebooting-the-servos">Rebooting the Servos</h3>
-<p>Under high-load conditions the servos may enter an error state to protect themselves from thermal overload. In this case, the red LED on the servo will flash (if visible). In addition, the servo will be unresponsive to motion commands. In this case, allow the overheating servo to cool down and reboot the servos using the <code>stretch_robot_dynamixel_reboot.py</code> tool: </p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>stretch_robot_dynamixel_reboot.py
-<span class="go">For use with S T R E T C H (TM) RESEARCH EDITION from Hello Robot Inc.</span>
-
-<span class="go">---- Rebooting Head ---- </span>
-<span class="go">[Dynamixel ID:011] Reboot Succeeded.</span>
-<span class="go">[Dynamixel ID:012] Reboot Succeeded.</span>
-<span class="go">---- Rebooting Wrist ---- </span>
-<span class="go">[Dynamixel ID:013] Reboot Succeeded.</span>
-<span class="go">[Dynamixel ID:014] Reboot Succeeded.</span>
+<h3 id="stretch-firmware">Stretch Firmware</h3>
+<p>The firmware and the Python SDK (called Stretch Body) communicate on an established protocol. Therefore, it is important to maintain a protocol match between the different firmware and Stretch Body versions. Fortunately, there is a script that handles this automatically. In the command line, run the following command:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>RE1_firmware_updater.py --status
 </code></pre></div>
-<h3 id="identify-servos-on-the-bus">Identify Servos on the Bus</h3>
-<p>If it is unclear which servos are on the bus, and at what baud rate, you can use the <code>RE1_dynamixel_id_scan.py</code> tool. Here we see that the two head servos are at ID 11 and 12 at baud 57600.</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>RE1_dynamixel_id_scan.py /dev/hello-dynamixel-head --baud <span class="m">57600</span>
-<span class="go">Scanning bus /dev/hello-dynamixel-head at baud rate 57600</span>
-<span class="go">----------------------------------------------------------</span>
-<span class="go">[Dynamixel ID:000] ping Failed.</span>
-<span class="go">[Dynamixel ID:001] ping Failed.</span>
-<span class="go">[Dynamixel ID:002] ping Failed.</span>
-<span class="go">[Dynamixel ID:003] ping Failed.</span>
-<span class="go">[Dynamixel ID:004] ping Failed.</span>
-<span class="go">[Dynamixel ID:005] ping Failed.</span>
-<span class="go">[Dynamixel ID:006] ping Failed.</span>
-<span class="go">[Dynamixel ID:007] ping Failed.</span>
-<span class="go">[Dynamixel ID:008] ping Failed.</span>
-<span class="go">[Dynamixel ID:009] ping Failed.</span>
-<span class="go">[Dynamixel ID:010] ping Failed.</span>
-<span class="go">[Dynamixel ID:011] ping Succeeded. Dynamixel model number : 1080</span>
-<span class="go">[Dynamixel ID:012] ping Succeeded. Dynamixel model number : 1060</span>
-<span class="go">[Dynamixel ID:013] ping Failed.</span>
-<span class="go">[Dynamixel ID:014] ping Failed.</span>
-<span class="go">[Dynamixel ID:015] ping Failed.</span>
-<span class="go">[Dynamixel ID:016] ping Failed.</span>
-<span class="go">[Dynamixel ID:017] ping Failed.</span>
-<span class="go">[Dynamixel ID:018] ping Failed.</span>
-<span class="go">[Dynamixel ID:019] ping Failed.</span>
-<span class="go">[Dynamixel ID:020] ping Failed.</span>
-<span class="go">[Dynamixel ID:021] ping Failed.</span>
-<span class="go">[Dynamixel ID:022] ping Failed.</span>
-<span class="go">[Dynamixel ID:023] ping Failed.</span>
-<span class="go">[Dynamixel ID:024] ping Failed.</span>
+<p>This script will automatically determine what version is currently running on the robot and provide a recommendation for a next step. Follow the next steps provided by the firmware updater script.</p>
+<h3 id="ubuntu">Ubuntu</h3>
+<p>The operating system upon which Stretch RE1 is built is called Ubuntu. This operating system provides the underlying packages that power Stretch's software packages. Furthermore, users of Stretch depend on this operating system and the underlying packages to develop software on Stretch. Therefore, it is important to keep the OS and these underlying packages up to date. In the command line, run the following command:</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>sudo apt update
+<span class="gp">$ </span>sudo apt upgrade
 </code></pre></div>
-<h3 id="setting-the-servo-baud-rate">Setting the Servo Baud Rate</h3>
-<p>Dynamixel servos come with baudrate=57600 from the factory.  When adding your own servos to the end-of-arm tool, you may want to set the servo ID using the <code>RE1_dynamixel_set_baud.py</code> tool. For example:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>RE1_dynamixel_set_baud.py /dev/hello-dynamixel-wrist <span class="m">13</span> <span class="m">115200</span>
-<span class="go">---------------------</span>
-<span class="go">Checking servo current baud for 57600</span>
-<span class="go">----</span>
-<span class="go">Identified current baud of 57600. Changing baud to 115200</span>
-<span class="go">Success at changing baud</span>
+<p><a href="https://en.wikipedia.org/wiki/APT_(software)">Apt</a> is the package manager that handles updates for all Ubuntu packages.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="firmware-mismatch-error">Firmware Mismatch Error</h3>
+<p>When working with Stretch Body, if you see the following error:</p>
+<div class="highlight"><pre><span></span><code>----------------
+Firmware protocol mismatch on /dev/XXXX.
+Protocol on board is pX.
+Valid protocol is: pX.
+Disabling device.
+Please upgrade the firmware and/or version of Stretch Body.
+----------------
 </code></pre></div>
-<h3 id="setting-the-servo-id">Setting the Servo ID</h3>
-<p>Dynamixel servos come with ID=1 from the factory. When adding your own servos to the end-of-arm tool, you may want to set the servo ID using the <code>RE1_dynamixel_id_change.py</code> tool. For example:</p>
-<div class="highlight"><pre><span></span><code><span class="gp">$ </span>RE1_dynamixel_id_change.py /dev/hello-dynamixel-wrist <span class="m">1</span> <span class="m">13</span> --baud <span class="m">115200</span>
-<span class="go">[Dynamixel ID:001] ping Succeeded. Dynamixel model number : 1080</span>
-<span class="go">Ready to change ID 1 to 13. Hit enter to continue:</span>
-
-<span class="go">[Dynamixel ID:013] ping Succeeded. Dynamixel model number : 1080</span>
-<span class="go">Success at setting ID to 13</span>
+<p>This error appears because the low level Python SDK and the firmware cannot communicate to each other. There is a protocol mismatch preventing communication between the two. Simply run the following script and follow its recommendations to upgrade/downgrade the firmware as necessary to match the protocol level of Stretch Body.</p>
+<div class="highlight"><pre><span></span><code><span class="gp">$ </span>RE1_firmware_updater.py --status
 </code></pre></div>
 <hr />
 <div align="center"> All materials are Copyright 2020 by Hello Robot Inc. The Stretch RE1 robot has patents pending</div>
